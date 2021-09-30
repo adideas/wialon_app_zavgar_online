@@ -1,0 +1,43 @@
+var table = Array.from(document.querySelectorAll('div.info-panel table.info')).forEach(tabl => {
+
+var types = Array.from(tabl
+	.querySelectorAll('td.type'))
+	.map(x => x.innerText)
+	.map(x => {
+		if(x === 'var') {
+			return 'any'
+		}
+		if(x === 'Integer') {
+			return 'number'
+		}
+		return x;
+	});
+	
+var methods = Array.from(tabl.querySelectorAll('td.text')).map((x, index) => {
+	const method_string = x.querySelectorAll('h3')[0].innerText;
+	
+	const method_name = method_string.split('(')[0];
+	try {var args = method_string.split('(')[1].split(')')[0].split(',').map(y => y.replace('?', '').split(' ').filter(z => z).reverse().join(': ')).join(', ');} catch(e) {
+		var args = ''
+	}
+	
+	var type = types[index];
+	
+	if (type === 'var') {
+	type = 'any'
+	}
+	if(type === 'Integer') {
+			type = 'number'
+		}
+	
+	var return_method = method_name+'('+args+')' +': '+ type+';'
+	
+	return return_method;
+})
+
+console.error(methods.join('\n').replace(/var/g, 'any').replace(/Integer/g, 'number').replace(/ /g, ''))
+
+
+
+})
+
