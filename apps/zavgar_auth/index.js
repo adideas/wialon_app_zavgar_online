@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import router from './router'
 import '@/zavgar_auth/src/lang'
-import App from '@/zavgar_auth/src/app.vue'
+import App from '@/zavgar_auth/src/App.vue'
 import 'wialonjs'
 
 var sess = window.wialon.core.Session.getInstance()
