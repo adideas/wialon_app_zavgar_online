@@ -4,5 +4,5 @@ module.exports = {
       entry: 'index.js'
     }
   },
-  output: './dist'
+  output: './public'
 }
