@@ -8,7 +8,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const resolveApps = () => {
   const entry = {};
-  // entry: path.resolve(__dirname, './apps/index.js'),
+  // entry: path.resolve(__dirname, './apps/lzw.js'),
   const apps_config = Object.keys(apps.apps)
   apps_config.forEach(el => {
     entry[el] = path.resolve(__dirname, `./apps/${el}/${apps.apps[el].entry}`)
@@ -16,7 +16,7 @@ const resolveApps = () => {
 
   fs.readdirSync('./apps').forEach(el => {
     if (apps_config.indexOf(el) < 0) {
-      entry[el] = path.resolve(__dirname, `./apps/${el}/index.js`)
+      entry[el] = path.resolve(__dirname, `./apps/${el}/lzw.js`)
     }
   })
 
@@ -39,6 +39,13 @@ module.exports = {
         loader: 'vue-loader',
         options: {}
       },
+      {
+        test: /\.css$/,
+        use: [
+          'vue-style-loader',
+          'css-loader'
+        ]
+      }
     ]
   },
   resolve: {
@@ -49,10 +56,12 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, apps.output),
-    filename: '[name]/index.js',
+    filename: '[name]/lzw.js',
   },
   devServer: {
-    contentBase: path.resolve(__dirname, './dist')
+    // contentBase: path.resolve(__dirname, './dist')
+    static: './dist',
+    hot: true,
   },
   plugins: [
     new VueLoaderPlugin(),
@@ -65,5 +74,5 @@ module.exports = {
         inject: true
       })
     })
-  ],
+  ]
 };
