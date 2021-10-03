@@ -26,6 +26,11 @@ const resolveApps = () => {
 module.exports = {
   target: 'web',
   mode: "production",
+  performance: {
+    hints: false,
+    maxEntrypointSize: 1024000,
+    maxAssetSize: 1024000
+  },
   entry: resolveApps(),
   module: {
     rules: [

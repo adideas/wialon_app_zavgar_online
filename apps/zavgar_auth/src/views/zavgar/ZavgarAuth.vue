@@ -1,12 +1,14 @@
 <template>
   <div>
-    {{ $t('hello_word') }}
+    <vs-button>
+      Перейти в завгар
+    </vs-button>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWord'
+  name: 'ZavgarAuth'
 }
 </script>
 

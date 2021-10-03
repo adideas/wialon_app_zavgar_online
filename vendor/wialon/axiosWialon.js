@@ -13,6 +13,7 @@ const buffer = {
 
 const output = (data) => {
   if (data.id >= 0 && buffer[data.id]) {
+    console.error(data)
     buffer[data.id](data)
   }
 }
@@ -26,14 +27,8 @@ const registerFrame = () => {
   }
 
   buffer[response.id] = (res) => {
-    if (res && res.text) {
-      if (res.text.error && res.text.error > 0) {
-        frame.connect = false
-      } else{
-        frame.connect = true
-      }
-    } else {
-      frame.connect = false
+    if (res.error === 0) {
+      frame.connect = true
     }
   }
 
@@ -59,7 +54,10 @@ export function post(svc, params = {}) {
   if (frame.connect) {
     return new Promise((resolve, reject) => {
       if ((!query.sid) || (!query.baseUrl)) {
-        reject()
+        reject({
+          error: 1,
+          message: 'no connect'
+        })
       }
       if (!params) {
         params = {}
@@ -74,33 +72,37 @@ export function post(svc, params = {}) {
       }
 
       buffer[response.id] = (res) => {
-        if (res && res.text) {
-          if (res.text.error && res.text.error > 0) {
-            reject()
-          } else {
-            resolve(res.text)
-          }
+        if (res.error === 0) {
+          resolve(res.text)
         } else {
-          reject()
+          reject(res)
         }
       }
+
+      console.warn(response, request)
 
       frame.post.postMessage(JSON.stringify(response), query.baseUrl)
     })
   } else {
     return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        if (!frame.connect) {
+          clearInterval(interval)
+          reject({
+            error: 1,
+            message: 'no connect'
+          })
+        }
+      }, 10000)
+      console.error('start time out ' + timeout)
       const interval = setInterval(() => {
         if (frame.connect) {
+          clearTimeout(timeout)
+          console.error('stop time out ' + timeout)
           clearInterval(interval)
           post(svc, params).then(res => resolve(res)).catch(err => reject(err))
         }
       }, 100)
-      setTimeout(() => {
-        if (!frame.connect) {
-          clearInterval(interval)
-          reject()
-        }
-      }, 5000)
     })
   }
 }

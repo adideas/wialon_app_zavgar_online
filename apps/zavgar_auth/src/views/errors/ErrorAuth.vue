@@ -1,14 +1,15 @@
 <template>
   <div>
-    <router-view/>
+    ErrorAuth
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'ErrorAuth'
 }
 </script>
 
 <style scoped>
+
 </style>

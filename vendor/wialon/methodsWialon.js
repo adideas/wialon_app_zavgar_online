@@ -17,7 +17,7 @@ const cache = {
 }
 
 export function loginSid() {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     if (cache['loginSid']) {
       resolve(cache['loginSid'])
     }
@@ -31,6 +31,8 @@ export function loginSid() {
       cache['loginSid'] = res
       cache['custom_fields'] = res.user.prp
       resolve(cache['loginSid'])
+    }).catch((e) => {
+      reject(e)
     })
   });
 }

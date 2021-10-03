@@ -37,8 +37,9 @@
   "dependencies": {
     "axios": "^0.19.2",
     "vue": "2.6.10",
-    "vuex": "3.1.0",
     "vue-router": "3.0.2",
+    "vuesax": "^4.0.1-alpha.25",
+    "vuex": "3.1.0",
     "wialon": "file:vendor/wialon",
     "wialon_store": "file:vendor/wialon_store"
   },
