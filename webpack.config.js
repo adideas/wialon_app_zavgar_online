@@ -8,7 +8,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const resolveApps = () => {
   const entry = {};
-  // entry: path.resolve(__dirname, './apps/lzw.js'),
+  // entry: path.resolve(__dirname, './apps/index.js'),
   const apps_config = Object.keys(apps.apps)
   apps_config.forEach(el => {
     entry[el] = path.resolve(__dirname, `./apps/${el}/${apps.apps[el].entry}`)
@@ -16,7 +16,7 @@ const resolveApps = () => {
 
   fs.readdirSync('./apps').forEach(el => {
     if (apps_config.indexOf(el) < 0) {
-      entry[el] = path.resolve(__dirname, `./apps/${el}/lzw.js`)
+      entry[el] = path.resolve(__dirname, `./apps/${el}/index.js`)
     }
   })
 
@@ -56,7 +56,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, apps.output),
-    filename: '[name]/lzw.js',
+    filename: '[name]/index.js',
   },
   devServer: {
     // contentBase: path.resolve(__dirname, './dist')

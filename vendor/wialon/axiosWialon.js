@@ -26,7 +26,15 @@ const registerFrame = () => {
   }
 
   buffer[response.id] = (res) => {
-    frame.connect = true
+    if (res && res.text) {
+      if (res.text.error && res.text.error > 0) {
+        frame.connect = false
+      } else{
+        frame.connect = true
+      }
+    } else {
+      frame.connect = false
+    }
   }
 
   frame.post.postMessage(JSON.stringify(response), query.baseUrl)
@@ -49,7 +57,10 @@ window.addEventListener('message', (event) => {
 
 export function post(svc, params = {}) {
   if (frame.connect) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
+      if ((!query.sid) || (!query.baseUrl)) {
+        reject()
+      }
       if (!params) {
         params = {}
       }
@@ -62,18 +73,34 @@ export function post(svc, params = {}) {
         source: frame.source
       }
 
-      buffer[response.id] = (res) => { resolve(res.text) }
+      buffer[response.id] = (res) => {
+        if (res && res.text) {
+          if (res.text.error && res.text.error > 0) {
+            reject()
+          } else {
+            resolve(res.text)
+          }
+        } else {
+          reject()
+        }
+      }
 
       frame.post.postMessage(JSON.stringify(response), query.baseUrl)
     })
   } else {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const interval = setInterval(() => {
         if (frame.connect) {
           clearInterval(interval)
-          post(svc, params).then(res => resolve(res))
+          post(svc, params).then(res => resolve(res)).catch(err => reject(err))
         }
       }, 100)
+      setTimeout(() => {
+        if (!frame.connect) {
+          clearInterval(interval)
+          reject()
+        }
+      }, 5000)
     })
   }
 }
